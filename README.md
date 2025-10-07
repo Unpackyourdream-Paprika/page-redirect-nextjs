@@ -1,69 +1,30 @@
-# React + TypeScript + Vite
+# Page Redirect App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+이 앱은 nanobananas.store로 자동 리다이렉트하는 React 애플리케이션입니다.
 
-Currently, two official plugins are available:
+## 기능
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 현재 도메인이 nanobananas.store가 아닌 경우 자동으로 리다이렉트
+- `window.location.replace()` 사용으로 뒤로가기 방지
+- 깔끔한 페이지 전환
 
-## Expanding the ESLint configuration
+## 코드 구조
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```tsx
+import { useEffect } from "react";
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+function App() {
+  useEffect(() => {
+    const targetUrl = "https://nanobananas.store/";
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+    // 현재 도메인이 아닌 경우에만 리다이렉트
+    if (window.location.hostname !== "nanobananas.store") {
+      window.location.replace(targetUrl); // replace 사용 (뒤로가기 방지)
+    }
+  }, []);
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+  return null; // 화면은 비워둬도 됨
+}
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+export default App;
 ```
